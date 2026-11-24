@@ -51,8 +51,15 @@ WORD = "Almost"
 def main() -> None:
     out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
     os.makedirs(out_dir, exist_ok=True)
-    with open(os.path.join(out_dir, "entry.txt"), "w", encoding="utf-8") as f:
+    out_path = os.path.join(out_dir, "entry.txt")
+    with open(out_path, "w", encoding="utf-8") as f:
         f.write(WORD)
+    # Validation pass: re-read what was just written and confirm it is
+    # exactly the single word "Almost" — 6 chars, no spaces, no newline.
+    with open(out_path, "r", encoding="utf-8") as f:
+        written = f.read()
+    assert written == WORD, f"entry.txt mismatch: {written!r}"
+    assert len(written) == 6 and " " not in written and not written.endswith("\n")
     print(f"Verified: {len(WORD)} characters, 1 word.")
     print(WORD)
 
